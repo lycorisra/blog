@@ -159,6 +159,400 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-webpack-in-practice_01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/03/10/webpack-in-practice_01/">webpack打包实践（1）- 基础框架</a>
+    </h1>
+  
+
+        
+        <a href="/blog/2018/03/10/webpack-in-practice_01/" class="archive-article-date">
+  	<time datetime="2018-03-10T06:53:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="打包策略"><a href="#打包策略" class="headerlink" title="打包策略"></a>打包策略</h3><p>这一阶段主要是针对design页面的资源进行打包，同时考虑到后期要对所有页面打包的扩展性，决定采用多入口文件打包策略，初步制定的打包策略如下：</p>
+<ul>
+<li>抽离出所有页面公共的第三方js文件包括扩展，打包为lib.js，每个页面自己引用的第三方文件打包为vender.js</li>
+<li>所有css文件全部打包进main.css文件中，这里没有进行css拆分处理</li>
+<li>通过AMD模块依赖的js文件打包进design.component.js文件中，实现模块的按需加载，依赖的css文件通过ExtractTextPlugin插件自动合并到main.css中</li>
+<li>css文件中引入的图片资源通过url-loader进行打包</li>
+<li>针对非模块化的js文件，例如jQuery，通过expose-loader暴露出所需的全局变量$和jQuery，自定义的全局变量，例如userInfo，通过代码<code>window.userInfo = userInfo</code>方式，实现全局访问</li>
+<li>所有打包完成后的输出文件最终会上传到阿里云，进行CDN处理</li>
+</ul>
+<p>制定好了打包策略后，开始影响后面的整个打包过程</p>
+        
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_01/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_01/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-webpack-in-practice_02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/03/10/webpack-in-practice_02/">webpack打包实践（2）- 处理ejs文件</a>
+    </h1>
+  
+
+        
+        <a href="/blog/2018/03/10/webpack-in-practice_02/" class="archive-article-date">
+  	<time datetime="2018-03-10T06:46:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>第一阶段已经完成了webpack打包代码基础框架，并在此基础上完成了design页面的打包工作，但是打包工作仍然不够彻底，还有很大工作需要完成，这一期主要完成以下两个任务：</p>
+<ul>
+<li>design页面有部分js和css文件没有打包，这部分文件主要是include方式引用的公共模板加载的资源</li>
+<li>其他剩余的页面没有打包，这些页面引入的资源数量远没有design那么多，但资源比较分散，不好抽离出公共部分，所以进行统一处理</li>
+</ul>
+<p>以上两条各自的难点如下：</p>
+<ul>
+<li>ejs模板是在后端动态渲染的，webpack静态分析模块加载和依赖的时候无法解析入口页面中include进来的ejs模板文件包含的资源，所以需要借助Node遍历这些文件，并完成资源解析工作</li>
+<li>现有的loader不能很好的处理页面中的script和link标签，同时，由于页面繁多，同样需要借助Node遍历views目录下所有页面，生成每个页面的入口信息</li>
+</ul>
+<p>简而言之，这一阶段的工作主要就是如何生成webpack打包的入口列表</p>
+        
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_02/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_02/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-webpack-in-practice_03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/03/10/webpack-in-practice_03/">webpack打包实践（3）- 图片处理</a>
+    </h1>
+  
+
+        
+        <a href="/blog/2018/03/10/webpack-in-practice_03/" class="archive-article-date">
+  	<time datetime="2018-03-10T06:36:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前两阶段，已经完成了所有页面的整体打包工作，但是仍然有部分图片未能打包进来，这部分图片主要是html页面（其中包括入口页面和公共模板文件，即icoms中的.ejs文件）中引入的图片资源和js文件中引入的图片，这部分图片由于没有加入webpack打包依赖列表，所以webpack无法进行打包处理，所以，需要手动将这些图片加入的打包依赖列表中，并且打包完成后，要能够更新图片资源引用地址</p>
+        
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_03/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_03/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-webpack-in-practice_04" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/03/10/webpack-in-practice_04/">webpack打包实践（4）- 未完待续</a>
+    </h1>
+  
+
+        
+        <a href="/blog/2018/03/10/webpack-in-practice_04/" class="archive-article-date">
+  	<time datetime="2018-03-10T06:28:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="遗留问题"><a href="#遗留问题" class="headerlink" title="遗留问题"></a>遗留问题</h3><p>经过前面三个阶段的工作，整个项目的前端资源打包任务已经完成预期要求，但是目前仍然存在一个很大的问题，那就是打包效率的问题。在本地开发环境下，由于每次代码更改后是增量打包，所以打包效率较快，但是，在发布到测试环境和正式环境后，进行的是全量打包。所以，不管每次代码更改量的多少，每次运行一次完整打包，从打包到上传CDN整个过程大概总共需要5分钟左右时间，在这期间，网站无法正常访问，页面样式发生错乱，带来很不好的体验；</p>
+<p>除此之外，还有一个隐藏的问题，那就是打包配置的时候，views目录下的入口页面即作为模板又作为输出文件，每次打包完成后，webpack会修改入口页面代码（更新资源引用）。之前出现入口页面代码出错，然后导致下一次打包失败的情况。</p>
+        
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_04/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/blog/2018/03/10/webpack-in-practice_04/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-hello-react-native" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2017/10/15/hello-react-native/">react native开发环境搭建</a>
+    </h1>
+  
+
+        
+        <a href="/blog/2017/10/15/hello-react-native/" class="archive-article-date">
+  	<time datetime="2017-10-14T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h3><h4 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h4><p>需要安装Java JDK、Android Studio、Python 2和react-native-cli及yarn工具包</p>
+<ul>
+<li>Java JDK：</li>
+<li>Android Studio：</li>
+<li>Python 2<h4 id="环境变量设置"><a href="#环境变量设置" class="headerlink" title="环境变量设置"></a>环境变量设置</h4>安装完成后手动设置相应的环境变量，如下</li>
+</ul>
+        
+          <a class="article-more-a" href="/blog/2017/10/15/hello-react-native/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/blog/2017/10/15/hello-react-native/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-node-develop-guid" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -221,77 +615,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/blog/2017/10/15/node-develop-guid/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-react-native" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/15/hello-react-native/">react native开发环境搭建</a>
-    </h1>
-  
-
-        
-        <a href="/blog/2017/10/15/hello-react-native/" class="archive-article-date">
-  	<time datetime="2017-10-14T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>react native入门</p>
-<h3 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h3><h4 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h4><p>需要安装Java JDK、Android Studio、Python 2和react-native-cli及yarn工具包</p>
-<ul>
-<li>Java JDK：</li>
-<li>Android Studio：</li>
-<li>Python 2<h4 id="环境变量设置"><a href="#环境变量设置" class="headerlink" title="环境变量设置"></a>环境变量设置</h4>安装完成后手动设置相应的环境变量，如下</li>
-</ul>
-        
-          <a class="article-more-a" href="/blog/2017/10/15/hello-react-native/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/blog/2017/10/15/hello-react-native/">展开全文 >></a>
         </p>
       
 
@@ -504,7 +827,7 @@
 
         
         <a href="/blog/2017/10/11/hello-webpack/" class="archive-article-date">
-  	<time datetime="2017-10-11T14:44:47.372Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
+  	<time datetime="2017-10-11T14:44:47.373Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
 </a>
         
       </header>
@@ -658,337 +981,6 @@
 
 
   
-    <article id="post-bookmarks" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/09/24/bookmarks/">前端书签</a>
-    </h1>
-  
-
-        
-        <a href="/blog/2017/09/24/bookmarks/" class="archive-article-date">
-  	<time datetime="2017-09-24T00:59:38.340Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://www.cnblogs.com/xing901022/p/4658548.html" target="_blank" rel="external">RequireJS实例分析</a></p>
-<p><a href="http://www.tuicool.com/articles/jam2Anv" target="_blank" rel="external">快速理解RequireJs</a><br><a href="http://www.zhangxinxu.com/" target="_blank" rel="external">张鑫旭</a><br><a href="http://www.doyoe.com/" target="_blank" rel="external">杜瑶</a><br><a href="http://www.cnblogs.com/TomXu/archive/2011/12/15/2288411.html" target="_blank" rel="external">汤姆大叔</a><br><a href="http://isux.tencent.com/" target="_blank" rel="external">腾讯ISUX – 社交用户体验设计</a><br><a href="http://ued.ctrip.com/blog/" target="_blank" rel="external">携程设计委员会</a><br><a href="http://fex.baidu.com/" target="_blank" rel="external">百度fex</a></p>
-        
-          <a class="article-more-a" href="/blog/2017/09/24/bookmarks/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/blog/2017/09/24/bookmarks/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-mysql-start" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/09/24/mysql-start/">mysql环境搭建</a>
-    </h1>
-  
-
-        
-        <a href="/blog/2017/09/24/mysql-start/" class="archive-article-date">
-  	<time datetime="2017-09-24T00:59:37.965Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1、下载mysql，<a href="http://www.360sdn.com/opensource-datasource/2014/0925/4442.html" target="_blank" rel="external">下载地址</a></p>
-<p>2、解压下载好的压缩包到目录：D:\software\mysql-5.6.17-winx64；<br>3、设置系统环境变量，具体如下：<br>计算机 -》 属性 -》 高级系统设置 -》 环境变量 -》 环境变量 -》系统变量，双击“Path”行，弹出“编辑系统变量”对话框，变量值后面追加“D:\software\mysql-5.6.17-winx64\bin”；</p>
-        
-          <a class="article-more-a" href="/blog/2017/09/24/mysql-start/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">database</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/blog/categories/mysql//" class="article-tag-list-link color1">mysql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/blog/2017/09/24/mysql-start/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-cmdMarkdown" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/09/24/cmdMarkdown/">欢迎使用 Cmd Markdown 编辑阅读器</a>
-    </h1>
-  
-
-        
-        <a href="/blog/2017/09/24/cmdMarkdown/" class="archive-article-date">
-  	<time datetime="2017-09-24T00:59:37.824Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <hr>
-<p>我们理解您需要更便捷更高效的工具记录思想，整理笔记、知识，并将其中承载的价值传播给他人，<strong>Cmd Markdown</strong> 是我们给出的答案 —— 我们为记录思想和分享知识提供更专业的工具。 您可以使用 Cmd Markdown：</p>
-<blockquote>
-<ul>
-<li>整理知识，学习笔记</li>
-<li>发布日记，杂文，所见所想</li>
-<li>撰写发布技术文稿（代码支持）</li>
-<li>撰写发布学术论文（LaTeX 公式支持）</li>
-</ul>
-</blockquote>
-        
-          <a class="article-more-a" href="/blog/2017/09/24/cmdMarkdown/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/blog/2017/09/24/cmdMarkdown/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-hexo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/05/10/hello-hexo/">零基础之一步步搭建hexo博客</a>
-    </h1>
-  
-
-        
-        <a href="/blog/2016/05/10/hello-hexo/" class="archive-article-date">
-  	<time datetime="2016-05-10T02:23:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-05-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>hexo是什么<br>Hexo 是一个基于nodejs 的静态博客网站生成器，作者是来自台湾的 Tommy Chen<br>特点：<br>不可思议的快速 ─ 只要一眨眼静态文件即生成完成<br>支持 Markdown<br>仅需一道指令即可部署到 GitHub Pages 和 Heroku<br>已移植 Octopress 插件<br>高扩展性、自订性<br>兼容于 Windows, Mac &amp; Linux<br>官网地址：<a href="https://hexo.io/" target="_blank" rel="external">hexo</a></p>
-        
-          <a class="article-more-a" href="/blog/2016/05/10/hello-hexo/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">入门</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">github</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">blog</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/blog/categories/hexo//" class="article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/blog/2016/05/10/hello-hexo/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="extend next" rel="next" href="/blog/page/2/">Next &raquo;</a>
@@ -1003,7 +995,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2017 lycorisra
+    		&copy; 2018 lycorisra
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1086,22 +1078,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">app develop</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">web compontent</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">入门</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -1114,23 +1090,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">入门</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">webpack</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">docs</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">database</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1142,11 +1110,27 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Vue.js</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">node.js</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">database</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">app develop</a>
               </li>
             
             <div class="clearfix"></div>

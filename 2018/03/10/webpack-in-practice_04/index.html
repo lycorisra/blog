@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://github.com/yssa1258/lycorisra">
-  <title>web前端三种模块规范（CommonJS、AMD和CMD）浅析 | Lycorisra</title>
+  <title>webpack打包实践（4）- 未完待续 | Lycorisra</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区">
-<meta name="keywords" content="webpack,docs">
+  <meta name="description" content="遗留问题经过前面三个阶段的工作，整个项目的前端资源打包任务已经完成预期要求，但是目前仍然存在一个很大的问题，那就是打包效率的问题。在本地开发环境下，由于每次代码更改后是增量打包，所以打包效率较快，但是，在发布到测试环境和正式环境后，进行的是全量打包。所以，不管每次代码更改量的多少，每次运行一次完整打包，从打包到上传CDN整个过程大概总共需要5分钟左右时间，在这期间，网站无法正常访问，页面样式发生错">
+<meta name="keywords" content="webpack">
 <meta property="og:type" content="article">
-<meta property="og:title" content="web前端三种模块规范（CommonJS、AMD和CMD）浅析">
-<meta property="og:url" content="https://github.com/yssa1258/lycorisra/2017/10/11/webfrontend-modules/index.html">
+<meta property="og:title" content="webpack打包实践（4）- 未完待续">
+<meta property="og:url" content="https://github.com/yssa1258/lycorisra/2018/03/10/webpack-in-practice_04/index.html">
 <meta property="og:site_name" content="Lycorisra">
-<meta property="og:description" content="在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区">
+<meta property="og:description" content="遗留问题经过前面三个阶段的工作，整个项目的前端资源打包任务已经完成预期要求，但是目前仍然存在一个很大的问题，那就是打包效率的问题。在本地开发环境下，由于每次代码更改后是增量打包，所以打包效率较快，但是，在发布到测试环境和正式环境后，进行的是全量打包。所以，不管每次代码更改量的多少，每次运行一次完整打包，从打包到上传CDN整个过程大概总共需要5分钟左右时间，在这期间，网站无法正常访问，页面样式发生错">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-13T11:44:14.504Z">
+<meta property="og:updated_time" content="2018-03-10T06:37:01.130Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="web前端三种模块规范（CommonJS、AMD和CMD）浅析">
-<meta name="twitter:description" content="在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区">
+<meta name="twitter:title" content="webpack打包实践（4）- 未完待续">
+<meta name="twitter:description" content="遗留问题经过前面三个阶段的工作，整个项目的前端资源打包任务已经完成预期要求，但是目前仍然存在一个很大的问题，那就是打包效率的问题。在本地开发环境下，由于每次代码更改后是增量打包，所以打包效率较快，但是，在发布到测试环境和正式环境后，进行的是全量打包。所以，不管每次代码更改量的多少，每次运行一次完整打包，从打包到上传CDN整个过程大概总共需要5分钟左右时间，在这期间，网站无法正常访问，页面样式发生错">
   
     <link rel="alternative" href="/atom.xml" title="Lycorisra" type="application/atom+xml">
   
@@ -159,66 +159,31 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webfrontend-modules" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-webpack-in-practice_04" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      web前端三种模块规范（CommonJS、AMD和CMD）浅析
+      webpack打包实践（4）- 未完待续
     </h1>
   
 
         
-        <a href="/blog/2017/10/11/webfrontend-modules/" class="archive-article-date">
-  	<time datetime="2017-10-11T15:11:45.403Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
+        <a href="/blog/2018/03/10/webpack-in-practice_04/" class="archive-article-date">
+  	<time datetime="2018-03-10T06:28:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>　　在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区的努力下，目前已经有了模块化变成思想，并且已经形成相应的规范，遵循这些模块规范的实现已经成熟并被广泛运用。目前前端有三种模块规范，分别是CommonJS、AMD和CMD。</p>
+        <h3 id="遗留问题"><a href="#遗留问题" class="headerlink" title="遗留问题"></a>遗留问题</h3><p>经过前面三个阶段的工作，整个项目的前端资源打包任务已经完成预期要求，但是目前仍然存在一个很大的问题，那就是打包效率的问题。在本地开发环境下，由于每次代码更改后是增量打包，所以打包效率较快，但是，在发布到测试环境和正式环境后，进行的是全量打包。所以，不管每次代码更改量的多少，每次运行一次完整打包，从打包到上传CDN整个过程大概总共需要5分钟左右时间，在这期间，网站无法正常访问，页面样式发生错乱，带来很不好的体验；</p>
+<p>除此之外，还有一个隐藏的问题，那就是打包配置的时候，views目录下的入口页面即作为模板又作为输出文件，每次打包完成后，webpack会修改入口页面代码（更新资源引用）。之前出现入口页面代码出错，然后导致下一次打包失败的情况。</p>
 <a id="more"></a>
-<ul>
-<li><a href="http://wiki.CommonJS.org/wiki/Modules/1.1" target="_blank" rel="external">CommonJS</a>：CommonJS规范由该<a href="http://www.CommonJS.org/" target="_blank" rel="external">组织</a>制定，用在服务端，AMD和CMD用在浏览器环境。根据规范，一个单独的文件就是一个模块，加载模块使用require方法，该方法读取一个文件并执行，最后返回文件内部的exports对象。最典型的例子就是<a href="http://nodejs.cn/" target="_blank" rel="external">node.js</a>的<a href="http://nodejs.org/docs/latest/api/modules.html" target="_blank" rel="external">模块系统</a>，就是参照CommonJS规范实现的，在CommonJS中，有一个全局的方法require，用于加载模块。</li>
-<li><a href="https://github.com/amdjs/amdjs-api/wiki/AMD-(%E4%B8%AD%E6%96%87%E7%89%88">AMD</a>)：“Asynchronous Module Definition”的缩写，即异步模块定义。由于CommonJS实现的模块是在服务器端运行，并且所有模块都存放在本地硬盘中，而且是同步加载，模块加载效率主要取决于硬盘读取效率。所以，CommonJS模块不适用与浏览器环境，因为浏览器环境，模块都是存放在服务器，客户端加载模块的效率取决于网络的快慢，并且加载方式是异步请求，所以需要维护好模块的加载顺序，同时防止由于加载时间漫长导致的浏览器“假死”。在此种背景下，就诞生了AMD规范，典型的实现是<a href="http://requirejs.org/" target="_blank" rel="external">RequireJS</a>，其特点是提前执行（异步加载：依赖先执行+延迟执行</li>
-<li><a href="https://github.com/cmdjs/specification/blob/master/draft/module.md">CMD</a>：“Common Module Definition”的缩写，即通用模块定义，CMD规范是国内发展而来，其著名实现有<a href="https://seajs.github.io/seajs/docs/" target="_blank" rel="external">Sea.js</a>，Sea.js特点：延迟执行（运行到需加载，根据顺序执行）</li>
-</ul>
-<h2 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h2><p>CommonJS是服务器端模块的规范，由Node推广使用，根据CommonJS规范：</p>
-<ul>
-<li>一个单独的文件就是一个模块。每一个模块都是一个单独的作用域，也就是说，在该模块内部定义的变量，无法被其他模块读取，除非定义为global对象的属性。</li>
-<li>输出模块变量的最好方法是使用module.exports对象。</li>
-<li>加载模块使用require方法，该方法读取一个文件并执行，返回文件内部的module.exports对象<br>所以，CommonJS归法实现示例可以如下，：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">math.js</div><div class="line">exports.add = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> sum = <span class="number">0</span>, i = <span class="number">0</span>, args = <span class="built_in">arguments</span>, l = args.length;</div><div class="line">    <span class="keyword">while</span> (i &lt; l) &#123;</div><div class="line">      sum += args[i++];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">increment.js</div><div class="line"><span class="keyword">var</span> add = <span class="built_in">require</span>(<span class="string">'math'</span>).add;</div><div class="line">exports.increment = <span class="function"><span class="keyword">function</span>(<span class="params">val</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> add(val, <span class="number">1</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">index.js</div><div class="line"><span class="keyword">var</span> increment = <span class="built_in">require</span>(<span class="string">'increment'</span>).increment;</div><div class="line"><span class="keyword">var</span> a = increment(<span class="number">1</span>); <span class="comment">//2</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="AMD"><a href="#AMD" class="headerlink" title="AMD"></a>AMD</h2><p>AMD规范采用异步方式加载模块，模块的加载不影响它后面的语句的执行，所有依赖这个模块的语句都定义在回调函数中，等加载完成后，这个回调函数开始执行。AMDye是采用require语句加载模块，但不同的是，它要求两个参数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>([<span class="built_in">module</span>], callback);</div></pre></td></tr></table></figure></p>
-<p>第一个参数module是一个数组，里面的成员是要加载的模块；第二个参数callback则是模块加载成功后要执行的回调函数。将上面的代码改成AMD型时如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>([<span class="string">'math'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">math</span>) </span>&#123;</div><div class="line">	math.add(<span class="number">2</span>, <span class="number">3</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>math.add与math模块加载不是同步的，所以浏览器不会发生“假死”，因此，AMD规范更适用于浏览器环境<br>遵循AMD规范的实现有<a href="http://requirejs.org/" target="_blank" rel="external">RequireJS</a>，实际上AMD就是在RequireJS在推广过程中对模块定义的规范化产出，它主要解决如下两个问题：</p>
-<ul>
-<li>多个js文件可能有依赖关系，被依赖的文件需要早于依赖它的文件加载到浏览器中</li>
-<li>js加载的时候浏览器会停止页面的渲染，加载文件越多，页面失去响应的时间就越长<br>RequireJS定义了一个全局函数define，用来模块的定义：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">define(id?, dependencies?, factory);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>define函数参数说明如下：</p>
-<ul>
-<li>id：指定模块的名称，可选；如果没有提供该参数，则模块的名字应该默认为模块加载器请求的指定脚本的名字。如果提供了该参数，模块名必须是“顶级”的和绝对的（不允许相对名字）</li>
-<li>dependencies：是一个当前模块依赖的已被模块定义的模块标识的数组字面量,依赖参数是可选的，如果忽略此参数，它应该默认为[“require”, “exports”, “module”]。然而，如果工厂方法的长度属性小于3，加载器会选择以函数的长度属性指定的参数个数调用工厂方法</li>
-<li>factory，模块初始化要执行的函数或对象。如果为函数，它应该只被执行一次。如果是对象，此对象应该为模块的输出值<br>以下是RequireJS的模块定义和加载示例：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">math.js</div><div class="line">define(<span class="string">'math'</span>,[<span class="string">'jquery'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">$</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">        add: <span class="function"><span class="keyword">function</span>(<span class="params">x, y</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> x + y;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 模块加载</span></div><div class="line"><span class="built_in">require</span>([<span class="string">'jquery'</span>, <span class="string">'math'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">$, math</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(math.add(<span class="number">10</span>, <span class="number">100</span>));<span class="comment">//110</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h2><p>CMD与AMD有共同之处，主要不同的地方在于模块的定义和加载（运行和解析）时机有所不同，在CMD规范中，一个文件就是一个模块，代码格式如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, export, module</span>) </span>&#123;</div><div class="line">	<span class="comment">// 代码</span></div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>第一个参数require是用于把其他模块导入进来，exports用于导出当前模块的属性和方法，module是一个对象，用于存储当前模块相关联的属性和方法</p>
-<h4 id="AMD与CMD的区别"><a href="#AMD与CMD的区别" class="headerlink" title="AMD与CMD的区别"></a>AMD与CMD的区别</h4><p>AMD时依赖关系前置，在定义模块的时候就要声明其依赖的模块，而CMD时按需加载，依赖就近，只有在用到某个模块 的时候再加载，两者代码风格对比如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// AMD默认推荐写法，依赖必须在最开始就写好</span></div><div class="line">define([<span class="string">'./a'</span>, <span class="string">'./b'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	a.doSomething();</div><div class="line">	b.doSomething();</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// CMD</span></div><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">'./a'</span>); <span class="comment">// 依赖就近书写</span></div><div class="line">	a.doSomething();</div><div class="line">	<span class="keyword">var</span> b = <span class="built_in">require</span>(<span class="string">'./b'</span>); <span class="comment">// 依赖就近书写</span></div><div class="line">	b.doSomething();</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>CMD规范的实现有seajs，以下是seajs使用示例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义模块myModeul.js</span></div><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> $ = <span class="built_in">require</span>(<span class="string">'jquery.js'</span>)</div><div class="line">	$(<span class="string">'div'</span>).addClass(<span class="string">'active'</span>);</div><div class="line">	exports.data = <span class="number">1</span>;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 加载模块</span></div><div class="line">seajs.use([<span class="string">'myModule.js'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">my</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> star = my.data;</div><div class="line">    <span class="built_in">console</span>.log(star);  <span class="comment">//1</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>　　历史上，JavaScript一直没有模块（module）体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来，这对开发大型的、复杂的项目形成了巨大障碍。<br>在ES6之前，社区制定了一些模块加载方案，最主要的有CommonJS和AMD两种。前者用于服务器，后者用于浏览器。ES6在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代CommonJS和AMD规范，成为浏览器和服务器通用的模块解决方案。<br>　　ES6模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。CommonJS和AMD模块，都只能在运行时确定这些东西,比如，CommonJS模块就是对象，输入时必须查找对象属性。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://es6.ruanyifeng.com/#docs/module" target="_blank" rel="external">ECMAScript 6 入门</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2012/10/asynchronous_module_definition.html" target="_blank" rel="external">Javascript模块化编程</a></li>
-<li><a href="http://www.jianshu.com/p/d67bc79976e6" target="_blank" rel="external">前端模块化（CommonJs,AMD和CMD）</a></li>
-<li><a href="http://www.cnblogs.com/lvdabao/p/js-modules-develop.html" target="_blank" rel="external">js模块化历程</a></li>
-</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>以上两种情况，最佳的解决方案是将项目访问和项目打包分开进行，同时实现一个与本地开发环境类似的预编译机制，保证每次发布后，都是增量打包，项目打包完成后js、css和图片资源上传到CDN服务器，views目录下的入口页面上传到应用服务器，替换相应的文件，这样有效提升了打包效率，同时避免了网站短时间内无法访问的问题，也减少了打包失败的几率；</p>
+<p>第二个解决方案就是从webpack着手，需要修改入口配置，将每个页面中公共的模块抽离出来，例如，登陆、支付、头部和尾部等模块单独打包，然后每个页面分别引用。然后，每次运行打包后，手动指定需要打包的页面，例如：<code>npm run build --entry=home,index</code>，然后代码里通过<code>process.argv.splice(2)</code>来接收参数，根据该参数对指定的入口页面进行打包。这个解决方案需要均衡打包粒度和打包效率置点的平衡点，因为有些页面依赖的资源比较少，如果打包粒度过细，打包之后和打包之前区别不大。</p>
 
       
 
@@ -255,26 +220,11 @@
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
         		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">docs</a>
-        		</li>
       		
 		</ul>
 	</div>
 
       
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/blog/categories/webpack//" class="article-tag-list-link color3">webpack</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
 
       
 
@@ -324,7 +274,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://github.com/yssa1258/lycorisra/2017/10/11/webfrontend-modules/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://github.com/yssa1258/lycorisra/2018/03/10/webpack-in-practice_04/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -338,18 +288,18 @@
   
 <nav id="article-nav">
   
-    <a href="/blog/2017/10/14/app-develop-start/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/blog/2018/03/10/webpack-in-practice_03/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          移动app开发（未完待续）
+          webpack打包实践（3）- 图片处理
         
       </div>
     </a>
   
   
-    <a href="/blog/2017/10/11/hello-webpack/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">webpack中文文档（v3.5.5）</div>
+    <a href="/blog/2017/10/15/hello-react-native/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">react native开发环境搭建</div>
       <i class="icon-circle-right"></i>
     </a>
   

@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://github.com/yssa1258/lycorisra">
-  <title>web前端三种模块规范（CommonJS、AMD和CMD）浅析 | Lycorisra</title>
+  <title>webpack打包实践（1）- 基础框架 | Lycorisra</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区">
-<meta name="keywords" content="webpack,docs">
+  <meta name="description" content="打包策略这一阶段主要是针对design页面的资源进行打包，同时考虑到后期要对所有页面打包的扩展性，决定采用多入口文件打包策略，初步制定的打包策略如下：  抽离出所有页面公共的第三方js文件包括扩展，打包为lib.js，每个页面自己引用的第三方文件打包为vender.js 所有css文件全部打包进main.css文件中，这里没有进行css拆分处理 通过AMD模块依赖的js文件打包进design.co">
+<meta name="keywords" content="webpack">
 <meta property="og:type" content="article">
-<meta property="og:title" content="web前端三种模块规范（CommonJS、AMD和CMD）浅析">
-<meta property="og:url" content="https://github.com/yssa1258/lycorisra/2017/10/11/webfrontend-modules/index.html">
+<meta property="og:title" content="webpack打包实践（1）- 基础框架">
+<meta property="og:url" content="https://github.com/yssa1258/lycorisra/2018/03/10/webpack-in-practice_01/index.html">
 <meta property="og:site_name" content="Lycorisra">
-<meta property="og:description" content="在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区">
+<meta property="og:description" content="打包策略这一阶段主要是针对design页面的资源进行打包，同时考虑到后期要对所有页面打包的扩展性，决定采用多入口文件打包策略，初步制定的打包策略如下：  抽离出所有页面公共的第三方js文件包括扩展，打包为lib.js，每个页面自己引用的第三方文件打包为vender.js 所有css文件全部打包进main.css文件中，这里没有进行css拆分处理 通过AMD模块依赖的js文件打包进design.co">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-13T11:44:14.504Z">
+<meta property="og:updated_time" content="2018-03-10T06:31:44.707Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="web前端三种模块规范（CommonJS、AMD和CMD）浅析">
-<meta name="twitter:description" content="在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区">
+<meta name="twitter:title" content="webpack打包实践（1）- 基础框架">
+<meta name="twitter:description" content="打包策略这一阶段主要是针对design页面的资源进行打包，同时考虑到后期要对所有页面打包的扩展性，决定采用多入口文件打包策略，初步制定的打包策略如下：  抽离出所有页面公共的第三方js文件包括扩展，打包为lib.js，每个页面自己引用的第三方文件打包为vender.js 所有css文件全部打包进main.css文件中，这里没有进行css拆分处理 通过AMD模块依赖的js文件打包进design.co">
   
     <link rel="alternative" href="/atom.xml" title="Lycorisra" type="application/atom+xml">
   
@@ -159,65 +159,98 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-webfrontend-modules" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-webpack-in-practice_01" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      web前端三种模块规范（CommonJS、AMD和CMD）浅析
+      webpack打包实践（1）- 基础框架
     </h1>
   
 
         
-        <a href="/blog/2017/10/11/webfrontend-modules/" class="archive-article-date">
-  	<time datetime="2017-10-11T15:11:45.403Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-11</time>
+        <a href="/blog/2018/03/10/webpack-in-practice_01/" class="archive-article-date">
+  	<time datetime="2018-03-10T06:53:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>　　在web开发中，代码模块化有助于降低耦合，最大化实现代码重用，以最少的模块或零部件更快速地满足更多的个性化需求。不同于类似Java和C#等后端语言，前端javascript没有Class和Module等概念（正在制定中的ECMAScript标准第六版，将正式支持”类”和”模块”，但还需要很长时间才能投入实用），所以在模块化编程这块，javascript天然劣势。不过，在javascript社区的努力下，目前已经有了模块化变成思想，并且已经形成相应的规范，遵循这些模块规范的实现已经成熟并被广泛运用。目前前端有三种模块规范，分别是CommonJS、AMD和CMD。</p>
+        <h3 id="打包策略"><a href="#打包策略" class="headerlink" title="打包策略"></a>打包策略</h3><p>这一阶段主要是针对design页面的资源进行打包，同时考虑到后期要对所有页面打包的扩展性，决定采用多入口文件打包策略，初步制定的打包策略如下：</p>
+<ul>
+<li>抽离出所有页面公共的第三方js文件包括扩展，打包为lib.js，每个页面自己引用的第三方文件打包为vender.js</li>
+<li>所有css文件全部打包进main.css文件中，这里没有进行css拆分处理</li>
+<li>通过AMD模块依赖的js文件打包进design.component.js文件中，实现模块的按需加载，依赖的css文件通过ExtractTextPlugin插件自动合并到main.css中</li>
+<li>css文件中引入的图片资源通过url-loader进行打包</li>
+<li>针对非模块化的js文件，例如jQuery，通过expose-loader暴露出所需的全局变量$和jQuery，自定义的全局变量，例如userInfo，通过代码<code>window.userInfo = userInfo</code>方式，实现全局访问</li>
+<li>所有打包完成后的输出文件最终会上传到阿里云，进行CDN处理</li>
+</ul>
+<p>制定好了打包策略后，开始影响后面的整个打包过程</p>
 <a id="more"></a>
+<h3 id="资源分析"><a href="#资源分析" class="headerlink" title="资源分析"></a>资源分析</h3><p>需要打包的资源主要包括ejs、js、css和图片等，此外，还需要梳理出这些资源的引用方式，目前资源引用方式主要有以下几种：</p>
 <ul>
-<li><a href="http://wiki.CommonJS.org/wiki/Modules/1.1" target="_blank" rel="external">CommonJS</a>：CommonJS规范由该<a href="http://www.CommonJS.org/" target="_blank" rel="external">组织</a>制定，用在服务端，AMD和CMD用在浏览器环境。根据规范，一个单独的文件就是一个模块，加载模块使用require方法，该方法读取一个文件并执行，最后返回文件内部的exports对象。最典型的例子就是<a href="http://nodejs.cn/" target="_blank" rel="external">node.js</a>的<a href="http://nodejs.org/docs/latest/api/modules.html" target="_blank" rel="external">模块系统</a>，就是参照CommonJS规范实现的，在CommonJS中，有一个全局的方法require，用于加载模块。</li>
-<li><a href="https://github.com/amdjs/amdjs-api/wiki/AMD-(%E4%B8%AD%E6%96%87%E7%89%88">AMD</a>)：“Asynchronous Module Definition”的缩写，即异步模块定义。由于CommonJS实现的模块是在服务器端运行，并且所有模块都存放在本地硬盘中，而且是同步加载，模块加载效率主要取决于硬盘读取效率。所以，CommonJS模块不适用与浏览器环境，因为浏览器环境，模块都是存放在服务器，客户端加载模块的效率取决于网络的快慢，并且加载方式是异步请求，所以需要维护好模块的加载顺序，同时防止由于加载时间漫长导致的浏览器“假死”。在此种背景下，就诞生了AMD规范，典型的实现是<a href="http://requirejs.org/" target="_blank" rel="external">RequireJS</a>，其特点是提前执行（异步加载：依赖先执行+延迟执行</li>
-<li><a href="https://github.com/cmdjs/specification/blob/master/draft/module.md">CMD</a>：“Common Module Definition”的缩写，即通用模块定义，CMD规范是国内发展而来，其著名实现有<a href="https://seajs.github.io/seajs/docs/" target="_blank" rel="external">Sea.js</a>，Sea.js特点：延迟执行（运行到需加载，根据顺序执行）</li>
+<li>大部分资源通过AMD方式加载，包括ejs、css和js，其中由于Require.js不能直接处理css和html文件，所以在依赖ejs和css这两类文件时，在路径前面分别添加了“!text”和“!css”前缀，所以后面需要特殊处理</li>
+<li>一部分文件没有实现模块化规范，比如login/main.js文件，该文件中暴露了全局变量userInfo，但是在webpack打包后，userInfo变为局部变量，导致在外部无法访问该变量了，解决方法是将需要暴露的全局变量放在window对象下面，例如<code>window.userInfo = userInfo</code></li>
+<li>一部分第三方库，这些库大部分（有没有未实现的还需要确认）实现了常有的模块规范，如果这些模块未依照模块规范依赖的方式加载，且需要暴露该模块的全局变量，此时需要使用expose-loader进行处理，这些模块配置在<a href="../expose.js">expose.js</a>文件中</li>
+<li>对于通过html标签（script、link和img等）方式引入的资源，需要手工进行梳理，然后配置到相应的入口文件中，特别是ejs通过include方式复用的公共ejs模板需要通过递归处理，目前主要是通过自己写的<a href="../ejs-parse.js">ejs-parse.js</a>来完成这一步</li>
+<li>图片资源的处理，webpack的css-loader天然支持对css文件中的图片资源的处理，但是对html中的img标签及js文件中通过字符串拼接的图片资源无法很好的处理，所以这一阶段只对css文件中的图片进行处理（说明：html-loader可以实现html标签内的图片进行处理，这在后面进行说明）</li>
 </ul>
-<h2 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h2><p>CommonJS是服务器端模块的规范，由Node推广使用，根据CommonJS规范：</p>
+<h3 id="webpack配置"><a href="#webpack配置" class="headerlink" title="webpack配置"></a>webpack配置</h3><p>分析完资源类型和资源加载方式后，开始创建webpack打包的配置文件<a href="../../webpack.config.js">webpack.config.js</a>，由于采用多入口文件打包策略，所以需要先配置入口文件，然后再根据入口文件生成多个配置项，这里添加了三个文件<a href="../../webpack.config.js">webpack.config.js</a>、<a href="../base.config.js">base.config.js</a>和<a href="../entry.js">entry.js</a>，<br>入口文件配置如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = [</div><div class="line">    &#123;</div><div class="line">        <span class="string">"name"</span>: <span class="string">"lib"</span>,</div><div class="line">        <span class="string">"entry"</span>: &#123;</div><div class="line">            <span class="string">"lib"</span>: [</div><div class="line">                <span class="string">"/js/lib/jquery.js"</span>,</div><div class="line">                <span class="string">"/js/lib/ejs.js"</span>,</div><div class="line">                <span class="string">"/js/lib/ejs2.js"</span>,</div><div class="line">                <span class="string">"/js/lib/require.js"</span></div><div class="line">            ]</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"name"</span>: <span class="string">"design2"</span>,</div><div class="line">        <span class="string">"template"</span>: <span class="string">"views/design-v2.ejs"</span>,</div><div class="line">        <span class="string">"filename"</span>: <span class="string">"../views/design-v2.ejs"</span>,</div><div class="line">        <span class="string">"entry"</span>: &#123;</div><div class="line">            <span class="string">"design2/js/main"</span>: <span class="string">"views/design-v2/main.js"</span>,</div><div class="line">            <span class="string">"design2/js/vendor"</span>: [</div><div class="line">                <span class="string">"/js/lib/jquery-ui.min.js"</span>,</div><div class="line">                <span class="string">"/js/lib/jsPDF.js"</span>,</div><div class="line">                <span class="string">"/js/lib/md5.min.js"</span>,</div><div class="line">                <span class="string">"/js/lib/rgbcolor.js"</span>,</div><div class="line">                <span class="string">"/js/lib/StackBlur.js"</span>,</div><div class="line">                <span class="string">"/js/lib/canvg.min.js"</span>,</div><div class="line">                <span class="string">"/js/lib/glfx.js"</span>,</div><div class="line">                <span class="string">"/js/lib/qrcode2.js"</span>,</div><div class="line">                <span class="string">"/js/lib/fontfaceobserver.js"</span>,</div><div class="line">                <span class="string">"/views/design-v2/left-coms/background/colorp.js"</span>,</div><div class="line">                <span class="string">"/views/design-v2/header-coms/color/jscolor.js"</span></div><div class="line">            ]</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    ......</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>说明：</p>
 <ul>
-<li>一个单独的文件就是一个模块。每一个模块都是一个单独的作用域，也就是说，在该模块内部定义的变量，无法被其他模块读取，除非定义为global对象的属性。</li>
-<li>输出模块变量的最好方法是使用module.exports对象。</li>
-<li>加载模块使用require方法，该方法读取一个文件并执行，返回文件内部的module.exports对象<br>所以，CommonJS归法实现示例可以如下，：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">math.js</div><div class="line">exports.add = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> sum = <span class="number">0</span>, i = <span class="number">0</span>, args = <span class="built_in">arguments</span>, l = args.length;</div><div class="line">    <span class="keyword">while</span> (i &lt; l) &#123;</div><div class="line">      sum += args[i++];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">increment.js</div><div class="line"><span class="keyword">var</span> add = <span class="built_in">require</span>(<span class="string">'math'</span>).add;</div><div class="line">exports.increment = <span class="function"><span class="keyword">function</span>(<span class="params">val</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> add(val, <span class="number">1</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">index.js</div><div class="line"><span class="keyword">var</span> increment = <span class="built_in">require</span>(<span class="string">'increment'</span>).increment;</div><div class="line"><span class="keyword">var</span> a = increment(<span class="number">1</span>); <span class="comment">//2</span></div></pre></td></tr></table></figure>
-</li>
+<li>jquery-ui.min.js库文件必须放在jQuery插件前面，否则，打包完成后会导致jQuery相关的插件无法使用；</li>
+<li>name：为入口文件名称，对应为打包后该入口文件夹的目录名称；</li>
+<li>entry：为一个对象，配置入口文件依赖的资源列表，webpack将根据每个键对应的资源打包到进以该键名命名的文件中，由于键名称带有路径符号，所以打包输出后的文件具有对应的目录结构；</li>
+<li>template：为入口页面模板，webpack以此为模板，使用HtmlWebpackPlugin插件，打包完成后将最终的资源引用更新到模板内容，然后输出到filename指定的文件中；</li>
+<li>filename: HtmlWebpackPlugin输出文件，这里由于template和filename配置的名称一样，即每个入口页面既作为模板又作为输出文件，所以在webpack打包完成后，替换资源引用之前，必须先清除掉页面中重复的资源引用（主要为js和css），详细参考<a href="../plugins.js">plugins.js</a>中的自定义插件HtmlResourceWebpackPlugin</li>
 </ul>
-<h2 id="AMD"><a href="#AMD" class="headerlink" title="AMD"></a>AMD</h2><p>AMD规范采用异步方式加载模块，模块的加载不影响它后面的语句的执行，所有依赖这个模块的语句都定义在回调函数中，等加载完成后，这个回调函数开始执行。AMDye是采用require语句加载模块，但不同的是，它要求两个参数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>([<span class="built_in">module</span>], callback);</div></pre></td></tr></table></figure></p>
-<p>第一个参数module是一个数组，里面的成员是要加载的模块；第二个参数callback则是模块加载成功后要执行的回调函数。将上面的代码改成AMD型时如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>([<span class="string">'math'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">math</span>) </span>&#123;</div><div class="line">	math.add(<span class="number">2</span>, <span class="number">3</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>math.add与math模块加载不是同步的，所以浏览器不会发生“假死”，因此，AMD规范更适用于浏览器环境<br>遵循AMD规范的实现有<a href="http://requirejs.org/" target="_blank" rel="external">RequireJS</a>，实际上AMD就是在RequireJS在推广过程中对模块定义的规范化产出，它主要解决如下两个问题：</p>
+<p><a href="../base.config.js">base.config.js</a>里配置了webpack基础配置项，主要包括module、resolve、resolveLoader和plugins等，其余内容通过<a href="../entry.js">entry.js</a>里的每个入口配置内容进行构造，生成每一个入口文件最终的webpack配置对象。<br><a href="../../webpack.config.js">webpack.config.js</a>是webpack打包的默认配置文件，使用<code>webpack</code>命令时即以该文件作为配置文件，对项目进行打包。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</div><div class="line"><span class="keyword">const</span> entry = <span class="built_in">require</span>(<span class="string">'./build/entry'</span>);</div><div class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./build/base.config'</span>);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = <span class="function">(<span class="params">option = &#123;&#125;</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">var</span> opts = [];</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; entry.length; i++) &#123;</div><div class="line">            <span class="keyword">var</span> opt = baseConfig(entry[i], option);</div><div class="line">            opts.push(opt);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> opts;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>目前我们项目中，webpack运行环境分为开发环境、测试环境和正式环境，三者之间的区别如下：</p>
 <ul>
-<li>多个js文件可能有依赖关系，被依赖的文件需要早于依赖它的文件加载到浏览器中</li>
-<li>js加载的时候浏览器会停止页面的渲染，加载文件越多，页面失去响应的时间就越长<br>RequireJS定义了一个全局函数define，用来模块的定义：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">define(id?, dependencies?, factory);</div></pre></td></tr></table></figure>
-</li>
+<li>开发环境，无需代码压缩，支持sourcemap调试，不需上传CDN，需要开启本地服务</li>
+<li>测试环境，无需代码压缩、需上传CDN，支持sourcemap调试</li>
+<li>正式环境，代码压缩、、需上传CDN，不支持sourcemap调试</li>
 </ul>
-<p>define函数参数说明如下：</p>
+<p>所以，运行环境不同，webpack配置项也不同，因此添加四个文件：<a href="../_develop.js">_develop.js</a>、<a href="../_test.js">_test.js</a>、<a href="../_production.js">_production.js</a>和<a href="../default.js">default.js</a>，分别用于配置开发环境、测试环境和正式环境及默认环境下webpack打包配置，另外，还添加了两个文件<a href="../dev-routes.js">dev-routes.js</a>和<a href="../dev-server.js">dev-server.js</a>,用于开发环境下，搭建webpack本地服务器来辅助开发。</p>
+<h3 id="自定义插件"><a href="#自定义插件" class="headerlink" title="自定义插件"></a>自定义插件</h3><p>webpack打包完成后，HtmlWebpackPlugin插件会在filename属性配置的页面中插入script和link标签，生成最终的资源引用，由于这些页面既作为模板又作为输出文件（即filename和template配置的是用一个文件），所以在webpack打包完成后，生成资源引用之前，需要删除掉已有的script和link标签，防止资源的重复引用。因此，自定义插件：HtmlResourceWebpackPlugin，具体代码参考<a href="../plugins.js">plugins.js</a></p>
+<h3 id="CDN处理"><a href="#CDN处理" class="headerlink" title="CDN处理"></a>CDN处理</h3><p>非开发环境下，webpack打包完毕后，最终会将所有资源输出到public/dist目录下，该目录根据入口文件结构进行组织，然后遍历该目录下的所有文件，根据当前环境配置，上传到相应的CDN地址。相应的代码实现参考<a href="../deploy.js">deploy.js</a>.</p>
+<h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><p>开发环境下，运行<code>npm run dev-server</code>命令后，开始执行打包，并启动本地服务，端口为3005，同时该服务承载了另一个webpack服务，该服务会实时监听本地文件变化，因此当修改代码后，会自动重新打包，打包完成后刷新浏览器即可看到变化；其中，<a href="../dev-routes.js">dev-routes.js</a>用于进行路由处理，在响应每一个页面请求之前，先发起一个新的对webpack服务器同样路由的请求，该请求从内存中加载资源，然后将响应返回给前端，这样，整个过程实现了本应该从磁盘访问到内存访问的转换，避免了开发环境下频繁修改本地文件，也提升了开发效率。相关代码参考<a href="../dev-routes.js">dev-routes.js</a>。</p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>所有打包相关的命令都已经配置到package.json里的scripts项里，运行<code>npm run [script]</code>即可执行相关命令<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"scripts"</span>: &#123;</div><div class="line">        <span class="attr">"dev"</span>: <span class="string">"webpack --env.config default --progress --colors"</span>,</div><div class="line">        <span class="attr">"dev-server"</span>: <span class="string">"node ./build/dev-server.js"</span>,</div><div class="line">        <span class="attr">"build"</span>: <span class="string">"webpack --env.config test --progress --colors &amp;&amp; node ./build/deploy test"</span>,</div><div class="line">        <span class="attr">"publish"</span>: <span class="string">"webpack -p --env.config production --progress --colors &amp;&amp; node ./build/deploy production"</span>,</div><div class="line">        <span class="attr">"deploy"</span>: <span class="string">"node ./build/deploy"</span>,</div><div class="line">        <span class="attr">"parse"</span>: <span class="string">"node ./build/ejs-parse.js"</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>说明如下：</p>
 <ul>
-<li>id：指定模块的名称，可选；如果没有提供该参数，则模块的名字应该默认为模块加载器请求的指定脚本的名字。如果提供了该参数，模块名必须是“顶级”的和绝对的（不允许相对名字）</li>
-<li>dependencies：是一个当前模块依赖的已被模块定义的模块标识的数组字面量,依赖参数是可选的，如果忽略此参数，它应该默认为[“require”, “exports”, “module”]。然而，如果工厂方法的长度属性小于3，加载器会选择以函数的长度属性指定的参数个数调用工厂方法</li>
-<li>factory，模块初始化要执行的函数或对象。如果为函数，它应该只被执行一次。如果是对象，此对象应该为模块的输出值<br>以下是RequireJS的模块定义和加载示例：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">math.js</div><div class="line">define(<span class="string">'math'</span>,[<span class="string">'jquery'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">$</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">        add: <span class="function"><span class="keyword">function</span>(<span class="params">x, y</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> x + y;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 模块加载</span></div><div class="line"><span class="built_in">require</span>([<span class="string">'jquery'</span>, <span class="string">'math'</span>], <span class="function"><span class="keyword">function</span> (<span class="params">$, math</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(math.add(<span class="number">10</span>, <span class="number">100</span>));<span class="comment">//110</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
+<li>dev：运行本地打包，该命令不会启动webpack服务器，打包完成后资源输出到public/dist目录下</li>
+<li>dev-server：运行本地打包，并且会启动webpack服务器，打包完成后所有资源进入内存，不会修改本地文件</li>
+<li>build：测试环境打包命令，打包完成后会更新入口页面中的script和link资源引用，并上传打包资源到CDN测试地址</li>
+<li>publish：正式环境打包命令，打包完成后会更新入口页面中的script和link资源引用，并上传打包资源到CDN正式地址</li>
+<li>deploy：打包资源上传CDN命令，可以单独运行，但一般跟在打包脚本后执行</li>
+<li>parse：解析ejs文件中的资源（js、css和图片），后面可以带参数</li>
 </ul>
-<h2 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h2><p>CMD与AMD有共同之处，主要不同的地方在于模块的定义和加载（运行和解析）时机有所不同，在CMD规范中，一个文件就是一个模块，代码格式如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, export, module</span>) </span>&#123;</div><div class="line">	<span class="comment">// 代码</span></div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>第一个参数require是用于把其他模块导入进来，exports用于导出当前模块的属性和方法，module是一个对象，用于存储当前模块相关联的属性和方法</p>
-<h4 id="AMD与CMD的区别"><a href="#AMD与CMD的区别" class="headerlink" title="AMD与CMD的区别"></a>AMD与CMD的区别</h4><p>AMD时依赖关系前置，在定义模块的时候就要声明其依赖的模块，而CMD时按需加载，依赖就近，只有在用到某个模块 的时候再加载，两者代码风格对比如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// AMD默认推荐写法，依赖必须在最开始就写好</span></div><div class="line">define([<span class="string">'./a'</span>, <span class="string">'./b'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	a.doSomething();</div><div class="line">	b.doSomething();</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// CMD</span></div><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">'./a'</span>); <span class="comment">// 依赖就近书写</span></div><div class="line">	a.doSomething();</div><div class="line">	<span class="keyword">var</span> b = <span class="built_in">require</span>(<span class="string">'./b'</span>); <span class="comment">// 依赖就近书写</span></div><div class="line">	b.doSomething();</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>CMD规范的实现有seajs，以下是seajs使用示例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义模块myModeul.js</span></div><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> $ = <span class="built_in">require</span>(<span class="string">'jquery.js'</span>)</div><div class="line">	$(<span class="string">'div'</span>).addClass(<span class="string">'active'</span>);</div><div class="line">	exports.data = <span class="number">1</span>;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 加载模块</span></div><div class="line">seajs.use([<span class="string">'myModule.js'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">my</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> star = my.data;</div><div class="line">    <span class="built_in">console</span>.log(star);  <span class="comment">//1</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>　　历史上，JavaScript一直没有模块（module）体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来，这对开发大型的、复杂的项目形成了巨大障碍。<br>在ES6之前，社区制定了一些模块加载方案，最主要的有CommonJS和AMD两种。前者用于服务器，后者用于浏览器。ES6在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代CommonJS和AMD规范，成为浏览器和服务器通用的模块解决方案。<br>　　ES6模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。CommonJS和AMD模块，都只能在运行时确定这些东西,比如，CommonJS模块就是对象，输入时必须查找对象属性。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://es6.ruanyifeng.com/#docs/module" target="_blank" rel="external">ECMAScript 6 入门</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2012/10/asynchronous_module_definition.html" target="_blank" rel="external">Javascript模块化编程</a></li>
-<li><a href="http://www.jianshu.com/p/d67bc79976e6" target="_blank" rel="external">前端模块化（CommonJs,AMD和CMD）</a></li>
-<li><a href="http://www.cnblogs.com/lvdabao/p/js-modules-develop.html" target="_blank" rel="external">js模块化历程</a></li>
+<h3 id="打包代码结构"><a href="#打包代码结构" class="headerlink" title="打包代码结构"></a>打包代码结构</h3><p>所有webpack打包相关的代码全部放在build目录下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">├── build</div><div class="line">│   ├── docs</div><div class="line">│   ├── _develop.js</div><div class="line">│   ├── _production.js</div><div class="line">│   ├── _test.js</div><div class="line">│   ├── base.config.js</div><div class="line">│   ├── default.js</div><div class="line">│   ├── deploy.js</div><div class="line">│   ├── dev-routes.js</div><div class="line">│   ├── dev-server.js</div><div class="line">│   ├── ejs-parse.js</div><div class="line">│   ├── entry.js</div><div class="line">│   ├── expose.js</div><div class="line">│   ├── plugins.js</div><div class="line">│   ├── utils.js</div><div class="line">└── webpack.config.js</div></pre></td></tr></table></figure></p>
+<p>其中，相关文件说明如下：</p>
+<ul>
+<li><a href="stage_1.md">docs</a>：webpack打包说明文档</li>
+<li><a href="../_develop.js">_develop.js</a>：开发环境下，webpack打包配置，包含devtool和output配置项</li>
+<li><a href="../_test.js">_test.js</a>：测试环境下，webpack打包配置，包含devtool和output配置项及阿里云oss上传配置</li>
+<li><a href="../_production.js">_production.js</a>：正式环境下，webpack打包配置，包含devtool和output配置项及阿里云oss上传配置</li>
+<li><a href="../base.config.js">base.config.js</a>：webpack基础配置项，根据入口文件entry.js生成最终的webpack配置对象数组</li>
+<li><a href="../default.js">default.js</a>：默认环境配置，默认为develop</li>
+<li><a href="../deploy.js">deploy.js</a>：打包后的资源上传到阿里云oss相关代码</li>
+<li><a href="../dev-routes.js">dev-routes.js</a>：开发环境下，webpack本地服务器路由信息配置</li>
+<li><a href="../dev-server.js">dev-server.js</a>：开发环境下，webpack本地服务器实现代码</li>
+<li><a href="../ejs-parse.js">ejs-parse.js</a>：ejs文件解析，主要通过正则表达式匹配ejs文件中的script、link和img及include等标签，解析相关的js、css和图片资源，形成入口文件数据结构，并提供img标签图片资源替换和图片打包等方法</li>
+<li><a href="../entry.js">entry.js</a>：入口文件数组，每个入口文件包含name、template、filename和entry等信息</li>
+<li><a href="../expose.js">expose.js</a>：设置需要暴露全局变量的第三方库文件</li>
+<li><a href="../plugins.js">plugins.js</a>：webpack自定义插件，目前包含两个插件：HtmlResourceWebpackPlugin和AssetsParseWebpackPlugin，分别用于资源引用替换和资源输入输出解析</li>
+<li><a href="../utils.js">utils.js</a>：常用工具函数，目前主要包含Node端文件处理相关的方法</li>
+</ul>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>需要注意的是，以下情况会导致打包失败：</p>
+<ul>
+<li><a href="../entry.js">entry.js</a>配置项中，entry属性数组中不能有重复的资源，或者template配置项前面不能以“html-loader”开头；</li>
+<li>html-loader的attrs属性配置了“link:href”，所以如果需要处理link标签中图片，需单独处理；</li>
+<li>在定义AMD模块时，之前依赖的ejs路径带有“!text”前缀，html-loader在无法解析该路径，所以需要去掉“!text”</li>
 </ul>
 
       
@@ -255,26 +288,11 @@
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
         		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">docs</a>
-        		</li>
       		
 		</ul>
 	</div>
 
       
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/blog/categories/webpack//" class="article-tag-list-link color3">webpack</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
 
       
 
@@ -324,7 +342,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://github.com/yssa1258/lycorisra/2017/10/11/webfrontend-modules/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://github.com/yssa1258/lycorisra/2018/03/10/webpack-in-practice_01/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -338,18 +356,9 @@
   
 <nav id="article-nav">
   
-    <a href="/blog/2017/10/14/app-develop-start/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          移动app开发（未完待续）
-        
-      </div>
-    </a>
   
-  
-    <a href="/blog/2017/10/11/hello-webpack/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">webpack中文文档（v3.5.5）</div>
+    <a href="/blog/2018/03/10/webpack-in-practice_02/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">webpack打包实践（2）- 处理ejs文件</div>
       <i class="icon-circle-right"></i>
     </a>
   
